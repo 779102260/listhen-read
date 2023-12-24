@@ -126,7 +126,6 @@ export async function listen(
   // http
   } else {
     // *
-    // TODO <-- here
     server = createServer(handle);
     addShutdown(server);
     // @ts-ignore
