@@ -98,6 +98,7 @@ export async function listen(
   }
 
   // --- Resolve Port ---
+  // 获取可用端口
   const port = (listhenOptions.port = await getPort({
     port: Number(listhenOptions.port),
     verbose: !listhenOptions.isTest,
@@ -108,10 +109,12 @@ export async function listen(
   }));
 
   // --- Listen ---
+  // 启动服务，监听端口
   let server: Server | HTTPServer;
   let https: Listener["https"] = false;
   const httpsOptions = listhenOptions.https as HTTPSOptions;
   let _addr: AddressInfo;
+  // https
   if (httpsOptions) {
     https = await resolveCertificate(httpsOptions);
     server = createHTTPSServer(https, handle);
@@ -120,7 +123,10 @@ export async function listen(
     await promisify(server.listen.bind(server))(port, listhenOptions.hostname);
     _addr = server.address() as AddressInfo;
     listhenOptions.port = _addr.port;
+  // http
   } else {
+    // *
+    // TODO <-- here
     server = createServer(handle);
     addShutdown(server);
     // @ts-ignore
